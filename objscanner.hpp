@@ -17,8 +17,7 @@ enum TokenType {
 	T_NUMBER,
 	T_SLASH,
 	T_IDENTIFIER,
-	T_NEWLINE,
-	T_EOF,
+	T_END,
 };
 
 struct Token {
@@ -55,7 +54,7 @@ class OBJScanner {
 	Token _identifier();
 
 	void _skip_whitespace();
-	void _skip_line();
+	void _skip_to_end();
 	inline int _peek() const { return is_at_end() ? EOF : *_end; }
 	int _advance();
 

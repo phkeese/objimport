@@ -7,21 +7,21 @@ namespace objimport {
 std::vector<Token> OBJScanner::scan_all() {
 	std::vector<Token> tokens{};
 
-	while (!is_at_end()) {
-		tokens.push_back(_scan_token());
-	}
+	TokenType last = T_ERROR;
+	do {
+		Token t = _scan_token();
+		last = t.type;
+		tokens.push_back(t);
+	} while (last != T_END);
 
 	return tokens;
 }
 
 Token OBJScanner::_scan_token() {
-retry:
 	_skip_whitespace();
 
 	int c = _advance();
 	switch (c) {
-	case EOF:
-		return _make_token(T_EOF);
 		// Separator for vertex/texture/normal
 	case '/':
 		return _make_token(T_SLASH);
@@ -29,14 +29,12 @@ retry:
 	case '+':
 	case '-':
 		return _number();
-		// Comments should be ignored
+	// Comments and empty lines should be skipped
+	case EOF:
 	case '#':
-		_skip_line();
-		goto retry;
+		_skip_to_end();
+		return _make_token(T_END);
 
-	// Newlines are relevant for parsing
-	case '\n':
-		return _make_token(T_NEWLINE);
 	default:
 		// Multi-character tokens
 		if (isalpha(c)) {
@@ -56,17 +54,16 @@ Token OBJScanner::_make_token(TokenType type) {
 }
 
 void OBJScanner::_skip_whitespace() {
-	while (isspace(_peek()) && _peek() != '\n') {
+	while (isspace(_peek())) {
 		_advance();
 	}
 	_start = _end;
 }
 
-void OBJScanner::_skip_line() {
-	while (_peek() != '\n') {
+void OBJScanner::_skip_to_end() {
+	while (!is_at_end()) {
 		_advance();
 	}
-	_start = _end;
 }
 
 int OBJScanner::_advance() {
