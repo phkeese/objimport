@@ -16,6 +16,7 @@ enum TokenType {
 	T_V,
 	T_NUMBER,
 	T_SLASH,
+	T_IDENTIFIER,
 	T_EOF,
 };
 
@@ -43,7 +44,7 @@ class OBJScanner {
 	OBJScanner(const char *source)
 		: _source(source), _start(source), _end(source) {}
 	std::vector<Token> scan_all();
-	inline bool is_at_end() const { return _peek() == '\0'; }
+	inline bool is_at_end() const { return *_end == '\0'; }
 
   private:
 	Token _scan_token();

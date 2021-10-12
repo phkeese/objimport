@@ -6,6 +6,11 @@ namespace objimport {
 
 std::vector<Token> OBJScanner::scan_all() {
 	std::vector<Token> tokens{};
+
+	while (!is_at_end()) {
+		tokens.push_back(_scan_token());
+	}
+
 	return tokens;
 }
 
@@ -51,12 +56,14 @@ void OBJScanner::_skip_whitespace() {
 	while (isspace(_peek())) {
 		_advance();
 	}
+	_start = _end;
 }
 
 void OBJScanner::_skip_line() {
 	while (_peek() != '\n') {
 		_advance();
 	}
+	_start = _end;
 }
 
 int OBJScanner::_advance() {
@@ -97,7 +104,7 @@ Token OBJScanner::_identifier() {
 	if (commands.count(command)) {
 		return _make_token(commands[command]);
 	} else {
-		return _make_token(T_ERROR);
+		return _make_token(T_IDENTIFIER);
 	}
 }
 
