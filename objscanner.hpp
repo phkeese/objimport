@@ -17,6 +17,7 @@ enum TokenType {
 	T_NUMBER,
 	T_SLASH,
 	T_IDENTIFIER,
+	T_NEWLINE,
 	T_EOF,
 };
 

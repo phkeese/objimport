@@ -4,10 +4,12 @@
 using namespace objimport;
 
 int main(int argc, char **argv) {
-	const char *source = "  10 / -20.3 #hello \n another line \n v +10 20 30 ";
+	const char *source =
+		"  10 / -20.3 #hello \n another line \n v +10 20 30 \n";
 	const std::vector<TokenType> types{
-		T_NUMBER, T_SLASH,	T_NUMBER, T_IDENTIFIER, T_IDENTIFIER,
-		T_V,	  T_NUMBER, T_NUMBER, T_NUMBER,		T_EOF,
+		T_NUMBER,	  T_SLASH,		T_NUMBER,  T_NEWLINE,			 //
+		T_IDENTIFIER, T_IDENTIFIER, T_NEWLINE,						 //
+		T_V,		  T_NUMBER,		T_NUMBER,  T_NUMBER,  T_NEWLINE, //
 	};
 
 	OBJScanner scanner{source};

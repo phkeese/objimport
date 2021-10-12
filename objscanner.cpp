@@ -34,6 +34,9 @@ retry:
 		_skip_line();
 		goto retry;
 
+	// Newlines are relevant for parsing
+	case '\n':
+		return _make_token(T_NEWLINE);
 	default:
 		// Multi-character tokens
 		if (isalpha(c)) {
@@ -53,7 +56,7 @@ Token OBJScanner::_make_token(TokenType type) {
 }
 
 void OBJScanner::_skip_whitespace() {
-	while (isspace(_peek())) {
+	while (isspace(_peek()) && _peek() != '\n') {
 		_advance();
 	}
 	_start = _end;
