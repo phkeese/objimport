@@ -3,6 +3,10 @@
 
 using namespace objimport;
 
+// TODO: As OBJ is completely line-oriented, we have no benefit in parsing the
+// file as a whole. We could save memory by simply scanning a single line at
+// once. Scanner should be easy to rewrite to that.
+
 int main(int argc, char **argv) {
 	const char *source =
 		"  10 / -20.3 #hello \n another line \n v +10 20 30 \n";
