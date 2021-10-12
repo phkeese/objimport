@@ -11,6 +11,8 @@ add_library(libobjimport
 	objreader.hpp
 	objreader.cpp
 	helper_functions.hpp
+	objscanner.hpp
+	objscanner.cpp
 )
 
 add_executable(objimport

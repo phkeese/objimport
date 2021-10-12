@@ -3,7 +3,10 @@
 
 namespace objimport {
 
-std::vector<Token> OBJScanner::scan_all() {}
+std::vector<Token> OBJScanner::scan_all() {
+	std::vector<Token> tokens{};
+	return tokens;
+}
 
 Token OBJScanner::_scan_token() {
 retry:
@@ -30,7 +33,8 @@ retry:
 		} else if (isnumber(c)) {
 			return _number();
 		} else {
-				}
+			throw ScanningError{"unrecognized character", _end - _source};
+		}
 	}
 }
 

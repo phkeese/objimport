@@ -1,4 +1,6 @@
 #pragma once
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 /**
@@ -17,12 +19,22 @@ enum TokenType {
 };
 
 struct Token {
-	Token(TokenType type, const char *begin, int length)
+	Token(TokenType type, const char *begin, long length)
 		: type(type), begin(begin), length(length) {}
 
 	TokenType type;
 	const char *begin;
-	int length;
+	long length;
+};
+
+class ScanningError : public std::runtime_error {
+  public:
+	ScanningError(std::string what, long where)
+		: std::runtime_error{what}, _where{where} {}
+	inline const long where() const { return _where; }
+
+  private:
+	long _where;
 };
 
 class OBJScanner {
