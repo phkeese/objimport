@@ -11,7 +11,7 @@ struct Vector3 {
 };
 
 // Stores indices to position, normal and texture coordinates of a vertex in OBJ
-// Indices start at 1 to reflect file
+// Indices start at 0
 struct Vertex {
 	Vertex(index position, index texture, index normal)
 		: position(position), texture(texture), normal(normal) {}
@@ -33,7 +33,7 @@ struct OBJData {
 
 	index add_vertex(Vector3 v);
 	index add_normal(Vector3 v);
-	index add_face(Face v);
+	index add_face(Face f);
 
 	std::vector<Vector3> vertices;
 	std::vector<Vector3> normals;

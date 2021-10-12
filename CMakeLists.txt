@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 add_library(libobjimport
 	objdata.hpp
-	objreader.cpp
+	objdata.cpp
 )
 
 add_executable(objimport
