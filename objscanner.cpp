@@ -1,5 +1,6 @@
 #include "objscanner.hpp"
-#include "ctype.h"
+#include <ctype.h>
+#include <map>
 
 namespace objimport {
 
@@ -14,14 +15,16 @@ retry:
 
 	int c = _advance();
 	switch (c) {
-		// Single character tokens
 	case EOF:
-		return _make_token(T_ERROR);
+		return _make_token(T_EOF);
+		// Separator for vertex/texture/normal
 	case '/':
 		return _make_token(T_SLASH);
+		// Numbers can start with a sign
 	case '+':
 	case '-':
 		return _number();
+		// Comments should be ignored
 	case '#':
 		_skip_line();
 		goto retry;
@@ -61,6 +64,40 @@ int OBJScanner::_advance() {
 		return *_end++;
 	} else {
 		return EOF;
+	}
+}
+
+Token OBJScanner::_number() {
+	while (isdigit(_peek())) {
+		_advance();
+	}
+
+	if (_peek() == '.') {
+		_advance();
+		while (isdigit(_peek())) {
+			_advance();
+		}
+	}
+
+	return _make_token(T_NUMBER);
+}
+
+Token OBJScanner::_identifier() {
+	// Scan to end of identifier
+	while (isalnum(_peek())) {
+		_advance();
+	}
+
+	// Match against known identifier types
+	std::map<std::string, TokenType> commands{
+		{"v", T_V},
+	};
+
+	std::string command(_start, _end - _start);
+	if (commands.count(command)) {
+		return _make_token(commands[command]);
+	} else {
+		return _make_token(T_ERROR);
 	}
 }
 
