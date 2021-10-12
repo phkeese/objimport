@@ -43,11 +43,10 @@ class OBJScanner {
   public:
 	OBJScanner(const char *source)
 		: _source(source), _start(source), _end(source) {}
-	std::vector<Token> scan_all();
+	Token next();
 	inline bool is_at_end() const { return *_end == '\0'; }
 
   private:
-	Token _scan_token();
 	Token _make_token(TokenType type);
 
 	Token _number();

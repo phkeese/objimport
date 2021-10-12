@@ -4,20 +4,7 @@
 
 namespace objimport {
 
-std::vector<Token> OBJScanner::scan_all() {
-	std::vector<Token> tokens{};
-
-	TokenType last = T_ERROR;
-	do {
-		Token t = _scan_token();
-		last = t.type;
-		tokens.push_back(t);
-	} while (last != T_END);
-
-	return tokens;
-}
-
-Token OBJScanner::_scan_token() {
+Token OBJScanner::next() {
 	_skip_whitespace();
 
 	int c = _advance();

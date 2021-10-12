@@ -14,10 +14,8 @@ int main(int argc, char **argv) {
 	};
 
 	OBJScanner scanner{source};
-	auto tokens = scanner.scan_all();
-	assert(tokens.size() == types.size());
-
-	for (int i = 0; i < tokens.size(); i++) {
-		assert(tokens[i].type == types[i]);
+	for (auto type : types) {
+		Token token = scanner.next();
+		assert(token.type == type);
 	}
 }
