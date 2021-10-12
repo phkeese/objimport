@@ -16,7 +16,7 @@ add_library(libobjimport
 )
 
 add_executable(objimport
-	objimport.cpp
+	main.cpp
 )
 
 target_link_libraries(objimport libobjimport)
