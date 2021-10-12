@@ -40,6 +40,8 @@ def main():
 		triangle_soup.tofile(soup_file)
 	bar.finish()
 
+	print(f"faces: {len(data.faces)} -> {len(data.faces) * 24} bytes")
+
 
 if __name__ == "__main__":
 	main()

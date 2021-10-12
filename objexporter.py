@@ -32,6 +32,7 @@ class OBJArraysExporter:
 			vector = self.data.normals[index - 1]
 		else:
 			vector = [0,0,0]
+		
 		for value in vector:
 			self.add_float(value)
 			
