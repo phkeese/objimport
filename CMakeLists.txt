@@ -5,8 +5,13 @@ cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-add_library(objimport
+add_library(libobjimport
 	objdata.hpp
+	objreader.cpp
+)
+
+add_executable(objimport
 	objimport.cpp
 )
 
+target_link_libraries(objimport libobjimport)
