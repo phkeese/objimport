@@ -184,7 +184,7 @@ Keyword OBJReader::_check_key(std::string s) {
 }
 
 ParsingError OBJReader::_error(std::string message) {
-	return ParsingError{message, _line, _previous()};
+	return ParsingError{message, _line, _peek()};
 }
 
 } // namespace objimport
