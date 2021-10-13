@@ -10,7 +10,6 @@ add_library(libobjimport
 	objdata.cpp
 	objreader.hpp
 	objreader.cpp
-	helper_functions.hpp
 )
 
 add_executable(objimport
@@ -22,6 +21,4 @@ target_link_libraries(objimport libobjimport)
 include(CTest)
 enable_testing()
 
-# add_executable(test_scanner tests/test_scanner.cpp)
-# target_link_libraries(test_scanner libobjimport)
-# add_test(test_all_tokens test_scanner)
+# This is where I would put my tests... if I had any

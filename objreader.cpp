@@ -1,5 +1,4 @@
 #include "objreader.hpp"
-#include "helper_functions.hpp"
 #include <algorithm>
 #include <fstream>
 #include <functional>
