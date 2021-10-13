@@ -29,7 +29,10 @@ int main(int argc, char **argv) {
 		auto data = reader.parse();
 	} catch (ParsingError e) {
 		std::string lexeme(e.where().begin, e.where().length);
-		std::cerr << "error:" << e.where().line << ":" << e.what() << " near '"
-				  << lexeme << "' (token:" << e.where().type << ")\n";
+		std::cout << "parsing error\n";
+		std::cout << "error:" << e.where().line << ":" << e.what() << " near '"
+				  << lexeme << "' (token:" << e.where().type << ")"
+				  << std::endl;
+		exit(EXIT_FAILURE);
 	}
 }
