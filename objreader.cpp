@@ -28,8 +28,12 @@ OBJData OBJReader::parse() {
 void OBJReader::_parse_next() {
 	Token t = _advance();
 	switch (t.type) {
+	// Ignore empty lines
+	case T_NEWLINE:
+		break;
 	case T_V:
 		_data.add_vertex(_parse_vector());
+		_consume(T_NEWLINE, "expect newline");
 		break;
 
 	default:
