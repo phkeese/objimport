@@ -22,32 +22,48 @@ OBJData OBJReader::parse() {
 }
 
 void OBJReader::_parse_next(OBJData &data) {
-	int c = _advance();
+	int c = _peek();
+
+	// Handle comments and newlines separately from keywords
+	switch (c) {
+	case EOF:
+		return;
+	case '\n':
+		_skip_line();
+		_line++;
+		return;
+	case '#':
+		_skip_line();
+		return;
+	}
 
 	switch (c) {
 		// No further parsing at end of file
 	case EOF:
 		return;
-	// Skip empty lines
+	// Skip empty lines and comments
 	case '\n':
-		_line++;
-		return;
 	case '#':
-		break;
+		_skip_line();
+		return;
+	}
 
-	// v or vn
-	case 'v':
-		if (_match('n')) {
-			data.add_normal(_parse_vector());
-		} else {
-			data.add_vertex(_parse_vector());
-		}
+	// Anything else has to be a keyword (or an error!)
+	std::string identifier = _parse_identifier();
+	Keyword keyword = _check_key(identifier);
+	switch (keyword) {
+	case K_V:
+		data.add_vertex(_parse_vector());
 		break;
-	case 'f':
+	case K_VN:
+		data.add_normal(_parse_vector());
+		break;
+	case K_F:
 		data.add_face(_parse_face());
 		break;
+
 	default:
-		throw _error("unexpected character");
+		throw _error("unexpected identifier '" + identifier + "'");
 		break;
 	}
 
@@ -91,6 +107,8 @@ Vertex OBJReader::_parse_face_vertex() {
 
 	vertex = _parse_int();
 
+	// This is such a mess because any of the following are valid
+	// v v/t v/t/n v//n
 	if (_match('/')) {
 		// Texture or normal
 		if (_match('/')) {
@@ -108,6 +126,12 @@ Vertex OBJReader::_parse_face_vertex() {
 	}
 
 	return {vertex, texture, normal};
+}
+
+std::string OBJReader::_parse_identifier() {
+	std::string identifier;
+	_file >> identifier;
+	return identifier;
 }
 
 void OBJReader::_skip_line() {
@@ -143,6 +167,19 @@ bool OBJReader::_check(int c) { return _peek() == c; }
 void OBJReader::_consume(int c, std::string message) {
 	if (!_match(c)) {
 		throw _error(message);
+	}
+}
+
+Keyword OBJReader::_check_key(std::string s) {
+	static std::map<std::string, Keyword> known_keywords{
+		{"v", K_V},			  {"vn", K_VN},			{"f", K_F},
+		{"mtllib", K_MTLLIB}, {"usemtl", K_USEMTL},
+	};
+
+	if (known_keywords.count(s)) {
+		return known_keywords[s];
+	} else {
+		return K_ERROR;
 	}
 }
 

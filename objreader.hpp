@@ -18,10 +18,13 @@ class ParsingError : public std::runtime_error {
 	int _character;
 };
 
-enum Identifier {
-	I_ERROR,
-	I_MTLLIB,
-	I_USEMTL,
+enum Keyword {
+	K_ERROR,
+	K_V,
+	K_VN,
+	K_F,
+	K_MTLLIB,
+	K_USEMTL,
 };
 
 class OBJReader {
@@ -37,8 +40,11 @@ class OBJReader {
 	Vector3 _parse_vector();
 	float _parse_float();
 	int _parse_int();
+	// Parse all vertices of a face
 	Face _parse_face();
+	// Parse a single vertex of a face in the v/t/n format
 	Vertex _parse_face_vertex();
+	// Parse the next string of non-space characters
 	std::string _parse_identifier();
 
 	// Skip to next \n and consume it
@@ -56,6 +62,8 @@ class OBJReader {
 	bool _check(int c);
 	// Consume the next character, throw error if not matching
 	void _consume(int c, std::string message);
+	// Try to match a string against a list of known keywords
+	Keyword _check_key(std::string s);
 	// Generate a ParsingError with my current state
 	ParsingError _error(std::string message);
 
