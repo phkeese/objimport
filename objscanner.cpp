@@ -16,11 +16,13 @@ Token OBJScanner::next() {
 	case '+':
 	case '-':
 		return _number();
+	case '\n':
+		return _make_token(T_NEWLINE);
 	// Comments and empty lines should be skipped
 	case EOF:
 	case '#':
-		_skip_to_end();
-		return _make_token(T_END);
+		_skip_line();
+		return _make_token(T_NEWLINE);
 
 	default:
 		// Multi-character tokens
@@ -41,16 +43,20 @@ Token OBJScanner::_make_token(TokenType type) {
 }
 
 void OBJScanner::_skip_whitespace() {
-	while (isspace(_peek())) {
+	while (isspace(_peek()) && _peek() != '\n') {
 		_advance();
 	}
 	_start = _end;
 }
 
-void OBJScanner::_skip_to_end() {
-	while (!is_at_end()) {
+void OBJScanner::_skip_line() {
+	while (_peek() != '\n') {
 		_advance();
 	}
+	// clear newline
+	_advance();
+
+	_start = _end;
 }
 
 int OBJScanner::_advance() {
