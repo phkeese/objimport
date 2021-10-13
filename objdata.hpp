@@ -29,7 +29,7 @@ struct Face {
 
 // Stores the entire contents of a file
 struct OBJData {
-	OBJData() : vertices{}, normals{}, faces{} {}
+	OBJData();
 
 	index add_vertex(Vector3 v);
 	index add_normal(Vector3 v);
