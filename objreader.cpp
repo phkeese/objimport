@@ -102,7 +102,7 @@ void OBJReader::_consume(int c, std::string message) {
 }
 
 ParsingError OBJReader::_error(std::string message) {
-	return ParsingError{message, _line, _peek()};
+	return ParsingError{message, _line, _previous()};
 }
 
 } // namespace objimport
