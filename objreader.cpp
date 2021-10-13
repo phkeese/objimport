@@ -52,18 +52,20 @@ void OBJReader::_parse_next(OBJData &data) {
 	std::string identifier = _parse_identifier();
 	Keyword keyword = _check_key(identifier);
 	switch (keyword) {
+	case K_ERROR:
+		throw _error("unexpected identifier '" + identifier + "'");
+		break;
+	case K_F:
+		data.add_face(_parse_face());
+		break;
 	case K_V:
 		data.add_vertex(_parse_vector());
 		break;
 	case K_VN:
 		data.add_normal(_parse_vector());
 		break;
-	case K_F:
-		data.add_face(_parse_face());
-		break;
-
 	default:
-		throw _error("unexpected identifier '" + identifier + "'");
+		// Ignore valid but unimplemented keywords
 		break;
 	}
 
@@ -172,8 +174,17 @@ void OBJReader::_consume(int c, std::string message) {
 
 Keyword OBJReader::_check_key(std::string s) {
 	static std::map<std::string, Keyword> known_keywords{
-		{"v", K_V},			  {"vn", K_VN},			{"f", K_F},
-		{"mtllib", K_MTLLIB}, {"usemtl", K_USEMTL},
+		{"f", K_F},			  //
+		{"l", K_L},			  //
+		{"mtllib", K_MTLLIB}, //
+		{"o", K_O},			  //
+		{"p", K_P},			  //
+		{"usemtl", K_USEMTL}, //
+		{"v", K_V},			  //
+		{"vn", K_VN},		  //
+		{"vp", K_VP},		  //
+		{"vt", K_VT},		  //
+		{"s", K_S},			  //
 	};
 
 	if (known_keywords.count(s)) {

@@ -20,11 +20,17 @@ class ParsingError : public std::runtime_error {
 
 enum Keyword {
 	K_ERROR,
+	K_F,
+	K_L,
+	K_MTLLIB,
+	K_O,
+	K_P,
+	K_USEMTL,
 	K_V,
 	K_VN,
-	K_F,
-	K_MTLLIB,
-	K_USEMTL,
+	K_VP,
+	K_VT,
+	K_S,
 };
 
 class OBJReader {
