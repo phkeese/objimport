@@ -81,7 +81,7 @@ int OBJReader::_parse_int() {
 Face OBJReader::_parse_face() {
 	std::vector<Vertex> vertices;
 
-	while (!_match('\n')) {
+	while (!_check('\n')) {
 		_skip_whitespace();
 		vertices.push_back(_parse_face_vertex());
 	}
