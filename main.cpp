@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
 	try {
 		auto data = reader.parse();
-		std::cout << "parsing successfull\n";
+		std::cout << "parsing successful\n";
 	} catch (ParsingError e) {
 		std::cout << "parsing error\n";
 		std::cout << "error:" << e.where() << ":" << e.what() << " near '"
