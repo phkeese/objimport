@@ -17,6 +17,7 @@ Token OBJScanner::next() {
 	case '-':
 		return _number();
 	case '\n':
+		_line++;
 		return _make_token(T_NEWLINE);
 	// Comments and empty lines should be skipped
 	case EOF:
@@ -37,7 +38,7 @@ Token OBJScanner::next() {
 }
 
 Token OBJScanner::_make_token(TokenType type) {
-	Token t{type, _start, _end - _start};
+	Token t{type, _start, _end - _start, _line};
 	_start = _end;
 	return t;
 }

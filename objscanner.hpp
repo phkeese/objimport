@@ -22,12 +22,13 @@ enum TokenType {
 
 struct Token {
 	Token(TokenType type = T_ERROR, const char *begin = nullptr,
-		  long length = 0)
-		: type(type), begin(begin), length(length) {}
+		  long length = 0, long line = 1)
+		: type(type), begin(begin), length(length), line(line) {}
 
 	TokenType type;
 	const char *begin;
 	long length;
+	long line;
 };
 
 class ScanningError : public std::runtime_error {
@@ -43,7 +44,7 @@ class ScanningError : public std::runtime_error {
 class OBJScanner {
   public:
 	OBJScanner(const char *source)
-		: _source(source), _start(source), _end(source) {}
+		: _source(source), _start(source), _end(source), _line{1} {}
 	Token next();
 	inline bool is_at_end() const { return *_end == '\0'; }
 
@@ -60,6 +61,7 @@ class OBJScanner {
 
 	const char *_source;
 	const char *_start, *_end;
+	long _line;
 };
 
 } // namespace objimport
