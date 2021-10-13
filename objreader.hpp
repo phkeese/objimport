@@ -29,7 +29,10 @@ class OBJReader {
 
 	// Parse a vector of three floats
 	Vector3 _parse_vector();
-	float _parse_number();
+	float _parse_float();
+	int _parse_int();
+	Face _parse_face();
+	Vertex _parse_face_vertex();
 
 	void _skip_line();
 	void _skip_whitespace();
@@ -40,6 +43,8 @@ class OBJReader {
 	int _advance();
 	// Compare the next character, advance if matching
 	bool _match(int c);
+	// Compare the next character
+	bool _check(int c);
 	// Consume the next character, throw error if not matching
 	void _consume(int c, std::string message);
 	ParsingError _error(std::string message);

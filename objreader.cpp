@@ -44,6 +44,9 @@ void OBJReader::_parse_next() {
 			_data.add_vertex(_parse_vector());
 		}
 		break;
+	case 'f':
+		_data.add_face(_parse_face());
+		break;
 	default:
 		throw _error("unexpected character");
 		break;
@@ -53,18 +56,61 @@ void OBJReader::_parse_next() {
 }
 
 Vector3 OBJReader::_parse_vector() {
-	float x = _parse_number();
-	float y = _parse_number();
-	float z = _parse_number();
+	float x = _parse_float();
+	float y = _parse_float();
+	float z = _parse_float();
 	return {x, y, z};
 }
 
-float OBJReader::_parse_number() {
+float OBJReader::_parse_float() {
 	float value;
 	if (!(_file >> value)) {
-		throw _error("expect number");
+		throw _error("expect float");
 	}
 	return value;
+}
+
+int OBJReader::_parse_int() {
+	int value;
+	if (!(_file >> value)) {
+		throw _error("expect int");
+	}
+	return value;
+}
+
+Face OBJReader::_parse_face() {
+	std::vector<Vertex> vertices;
+
+	while (!_match('\n')) {
+		_skip_whitespace();
+		vertices.push_back(_parse_face_vertex());
+	}
+
+	return Face{vertices};
+}
+
+Vertex OBJReader::_parse_face_vertex() {
+	index vertex = 0, texture = 0, normal = 0;
+
+	vertex = _parse_int();
+
+	if (_match('/')) {
+		// Texture or normal
+		if (_match('/')) {
+			// Only normal
+			texture = 0;
+			normal = _parse_int();
+		} else {
+			// Texture
+			texture = _parse_int();
+			if (_match('/')) {
+				// Also normal
+				normal = _parse_int();
+			}
+		}
+	}
+
+	return {vertex, texture, normal};
 }
 
 void OBJReader::_skip_line() {
@@ -87,13 +133,15 @@ int OBJReader::_advance() {
 }
 
 bool OBJReader::_match(int c) {
-	if (_peek() == c) {
+	if (_check(c)) {
 		_advance();
 		return true;
 	} else {
 		return false;
 	}
 }
+
+bool OBJReader::_check(int c) { return _peek() == c; }
 
 void OBJReader::_consume(int c, std::string message) {
 	if (!_match(c)) {
