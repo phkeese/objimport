@@ -23,4 +23,6 @@ int main(int argc, char **argv) {
 		Token token = scanner.next();
 		assert(token.type == type);
 	}
+
+	assert(scanner.is_at_end());
 }
