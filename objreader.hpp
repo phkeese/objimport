@@ -39,6 +39,7 @@ class OBJReader {
 	int _parse_int();
 	Face _parse_face();
 	Vertex _parse_face_vertex();
+	std::string _parse_identifier();
 
 	// Skip to next \n and consume it
 	void _skip_line();

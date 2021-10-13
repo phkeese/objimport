@@ -63,9 +63,7 @@ Vector3 OBJReader::_parse_vector() {
 
 float OBJReader::_parse_float() {
 	float value;
-	if (!(_file >> value)) {
-		throw _error("expect float");
-	}
+	_file >> value;
 	return value;
 }
 
