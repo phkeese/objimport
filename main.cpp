@@ -12,7 +12,6 @@ int main(int argc, char **argv) {
 		std::cerr << "usage: " << argv[0] << " <file>\n";
 		std::cout << "parsing default file...\n";
 		filename = "../model.obj";
-		exit(EXIT_FAILURE);
 	} else {
 		filename = argv[1];
 	}
