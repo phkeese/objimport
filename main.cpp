@@ -27,7 +27,8 @@ int main(int argc, char **argv) {
 		std::cout << "parsing successfull\n";
 	} catch (ParsingError e) {
 		std::cout << "parsing error\n";
-		std::cout << "error:" << e.where() << ":" << e.what() << std::endl;
+		std::cout << "error:" << e.where() << ":" << e.what() << " near '"
+				  << static_cast<char>(e.character()) << "'" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 }

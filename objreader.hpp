@@ -8,12 +8,14 @@ namespace objimport {
 
 class ParsingError : public std::runtime_error {
   public:
-	ParsingError(std::string what, long where)
-		: std::runtime_error{what}, _where{where} {}
+	ParsingError(std::string what, long where, int character)
+		: std::runtime_error{what}, _where{where}, _character{character} {}
 	inline const long where() const { return _where; }
+	inline const int character() const { return _character; }
 
   private:
 	long _where;
+	int _character;
 };
 
 class OBJReader {
@@ -29,6 +31,7 @@ class OBJReader {
 	Vector3 _parse_vector();
 	float _parse_number();
 
+	void _skip_line();
 	void _skip_whitespace();
 	inline int _previous() const { return _last; }
 	inline int _peek() const { return _file.peek(); }
@@ -43,7 +46,8 @@ class OBJReader {
 
 	std::istream &_file;
 	OBJData _data;
-	int _last, _next;
+	int _last;
+	long _line;
 };
 
 } // namespace objimport
