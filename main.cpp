@@ -20,19 +20,13 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	std::stringstream ss{};
-	ss << file.rdbuf();
-	OBJScanner scanner{ss.str().c_str()};
-	OBJReader reader{scanner};
+	OBJReader reader{file};
 
 	try {
 		auto data = reader.parse();
 	} catch (ParsingError e) {
-		std::string lexeme(e.where().begin, e.where().length);
 		std::cout << "parsing error\n";
-		std::cout << "error:" << e.where().line << ":" << e.what() << " near '"
-				  << lexeme << "' (token:" << e.where().type << ")"
-				  << std::endl;
+		std::cout << "error:" << e.where() << ":" << e.what() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 }

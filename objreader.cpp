@@ -9,8 +9,8 @@
 
 namespace objimport {
 
-OBJReader::OBJReader(OBJScanner &scanner)
-	: _scanner{scanner}, _data{}, _last{}, _next{} {
+OBJReader::OBJReader(std::istream &file)
+	: _file{file}, _data{}, _last{}, _next{} {
 	// Load meaningful data into _next
 	_advance();
 }
@@ -18,28 +18,24 @@ OBJReader::OBJReader(OBJScanner &scanner)
 OBJData OBJReader::parse() {
 	_data = OBJData{};
 
-	while (!_scanner.is_at_end()) {
-		_parse_next();
-	}
-
 	return _data;
 }
 
 void OBJReader::_parse_next() {
-	Token t = _advance();
-	switch (t.type) {
-	// Ignore empty lines
-	case T_NEWLINE:
-		break;
-	case T_V:
-		_data.add_vertex(_parse_vector());
-		_consume(T_NEWLINE, "expect newline");
-		break;
+	// Token t = _advance();
+	// switch (t.type) {
+	// // Ignore empty lines
+	// case T_NEWLINE:
+	// 	break;
+	// case T_V:
+	// 	_data.add_vertex(_parse_vector());
+	// 	_consume(T_NEWLINE, "expect newline");
+	// 	break;
 
-	default:
-		throw _error("unexpected token");
-		break;
-	}
+	// default:
+	// 	throw _error("unexpected token");
+	// 	break;
+	// }
 }
 
 Vector3 OBJReader::_parse_vector() {
@@ -50,19 +46,20 @@ Vector3 OBJReader::_parse_vector() {
 }
 
 float OBJReader::_parse_number() {
-	_consume(T_NUMBER, "expect number");
-	std::string lexeme(_previous().begin, _previous().length);
-	return std::stof(lexeme);
+	float value;
+	if (!(_file >> value)) {
+		throw _error("expect number");
+	}
+	return value;
 }
 
-Token OBJReader::_advance() {
+int OBJReader::_advance() {
 	_last = _next;
-	_next = _scanner.next();
-	return _last;
+	_next = _peek();
 }
 
-bool OBJReader::_match(TokenType type) {
-	if (_peek().type == type) {
+bool OBJReader::_match(int c) {
+	if (_peek() == c) {
 		_advance();
 		return true;
 	} else {
@@ -70,8 +67,8 @@ bool OBJReader::_match(TokenType type) {
 	}
 }
 
-void OBJReader::_consume(TokenType type, std::string message) {
-	if (!_match(type)) {
+void OBJReader::_consume(int c, std::string message) {
+	if (!_match(c)) {
 		throw _error(message);
 	}
 }
