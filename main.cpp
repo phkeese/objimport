@@ -6,13 +6,16 @@
 using namespace objimport;
 
 int main(int argc, char **argv) {
-	// if (argc < 2) {
-	// 	std::cerr << "usage: " << argv[0] << " <file>\n";
-	// 	exit(EXIT_FAILURE);
-	// }
+	std::string filename;
 
-	std::string filename{"../model.obj" /*argv[1]*/};
-	std::cout << "read file '" << filename << "'\n";
+	if (argc < 2) {
+		std::cerr << "usage: " << argv[0] << " <file>\n";
+		std::cout << "parsing default file...\n";
+		filename = "../model.obj";
+		exit(EXIT_FAILURE);
+	} else {
+		filename = argv[1];
+	}
 
 	std::ifstream file{filename};
 	if (!file) {

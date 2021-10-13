@@ -9,20 +9,19 @@
 
 namespace objimport {
 
-OBJReader::OBJReader(std::istream &file)
-	: _file{file}, _data{}, _last{}, _line{1} {}
+OBJReader::OBJReader(std::istream &file) : _file{file}, _last{}, _line{1} {}
 
 OBJData OBJReader::parse() {
-	_data = OBJData{};
+	OBJData data = OBJData{};
 
 	while (!_is_at_end()) {
-		_parse_next();
+		_parse_next(data);
 	}
 
-	return _data;
+	return data;
 }
 
-void OBJReader::_parse_next() {
+void OBJReader::_parse_next(OBJData &data) {
 	int c = _advance();
 
 	switch (c) {
@@ -39,13 +38,13 @@ void OBJReader::_parse_next() {
 	// v or vn
 	case 'v':
 		if (_match('n')) {
-			_data.add_normal(_parse_vector());
+			data.add_normal(_parse_vector());
 		} else {
-			_data.add_vertex(_parse_vector());
+			data.add_vertex(_parse_vector());
 		}
 		break;
 	case 'f':
-		_data.add_face(_parse_face());
+		data.add_face(_parse_face());
 		break;
 	default:
 		throw _error("unexpected character");

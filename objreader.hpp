@@ -18,6 +18,12 @@ class ParsingError : public std::runtime_error {
 	int _character;
 };
 
+enum Identifier {
+	I_ERROR,
+	I_MTLLIB,
+	I_USEMTL,
+};
+
 class OBJReader {
   public:
 	OBJReader(std::istream &file);
@@ -25,7 +31,7 @@ class OBJReader {
 
   private:
 	// Parse the next line
-	void _parse_next();
+	void _parse_next(OBJData &data);
 
 	// Parse a vector of three floats
 	Vector3 _parse_vector();
@@ -34,7 +40,9 @@ class OBJReader {
 	Face _parse_face();
 	Vertex _parse_face_vertex();
 
+	// Skip to next \n and consume it
 	void _skip_line();
+	// Skip to next \n but do not consume it
 	void _skip_whitespace();
 	inline int _previous() const { return _last; }
 	inline int _peek() const { return _file.peek(); }
@@ -47,10 +55,10 @@ class OBJReader {
 	bool _check(int c);
 	// Consume the next character, throw error if not matching
 	void _consume(int c, std::string message);
+	// Generate a ParsingError with my current state
 	ParsingError _error(std::string message);
 
 	std::istream &_file;
-	OBJData _data;
 	int _last;
 	long _line;
 };
