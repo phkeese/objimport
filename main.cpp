@@ -1,5 +1,7 @@
 #include "objreader.hpp"
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 using namespace objimport;
 
@@ -12,6 +14,15 @@ int main(int argc, char **argv) {
 	std::string filename{argv[1]};
 	std::cout << "read file '" << filename << "'\n";
 
-	OBJReader reader{};
-	auto data = reader.parse(filename);
+	std::ifstream file{filename};
+	if (!file) {
+		std::cerr << "cannot open file\n";
+		exit(EXIT_FAILURE);
+	}
+
+	std::stringstream ss{};
+	ss << file.rdbuf();
+	OBJScanner scanner{ss.str().c_str()};
+	OBJReader reader{scanner};
+	auto data = reader.parse();
 }
