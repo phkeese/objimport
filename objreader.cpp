@@ -22,20 +22,22 @@ OBJData OBJReader::parse() {
 }
 
 void OBJReader::_parse_next() {
-	// Token t = _advance();
-	// switch (t.type) {
-	// // Ignore empty lines
-	// case T_NEWLINE:
-	// 	break;
-	// case T_V:
-	// 	_data.add_vertex(_parse_vector());
-	// 	_consume(T_NEWLINE, "expect newline");
-	// 	break;
+	int c = _advance();
 
-	// default:
-	// 	throw _error("unexpected token");
-	// 	break;
-	// }
+	switch (c) {
+	// Skip empty lines
+	case '\n':
+		return;
+	case 'v':
+		_data.add_vertex(_parse_vector());
+		break;
+	default:
+		throw _error("unexpected character");
+		break;
+	}
+
+	_skip_whitespace();
+	_consume('\n', "expect new line");
 }
 
 Vector3 OBJReader::_parse_vector() {
@@ -51,6 +53,12 @@ float OBJReader::_parse_number() {
 		throw _error("expect number");
 	}
 	return value;
+}
+
+void OBJReader::_skip_whitespace() {
+	while (_peek() != '\n' && isspace(_peek())) {
+		_advance();
+	}
 }
 
 int OBJReader::_advance() {

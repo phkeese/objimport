@@ -1,7 +1,6 @@
 #pragma once
 
 #include "objdata.hpp"
-#include "objscanner.hpp"
 #include <istream>
 #include <stdexcept>
 
@@ -30,6 +29,7 @@ class OBJReader {
 	Vector3 _parse_vector();
 	float _parse_number();
 
+	void _skip_whitespace();
 	inline int _previous() const { return _last; }
 	inline int _peek() const { return _file.peek(); }
 	inline int _is_at_end() const { return _file.eof(); }
