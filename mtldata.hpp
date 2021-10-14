@@ -10,7 +10,8 @@
 namespace objimport {
 
 struct Material {
-	inline Material(Vector3 ambient = {0, 0, 0},   //
+	inline Material(std::string name,			   //
+					Vector3 ambient = {0, 0, 0},   //
 					Vector3 diffuse = {1, 1, 1},   //
 					Vector3 specular = {0, 0, 0},  //
 					float specular_exponent = 0.0, //
@@ -18,10 +19,11 @@ struct Material {
 					float refraction = 0.0,		   //
 					int illumination = 0		   //
 					)
-		: ambient{ambient}, diffuse{diffuse}, specular{specular},
+		: name{name}, ambient{ambient}, diffuse{diffuse}, specular{specular},
 		  specular_exponent{specular_exponent}, transparency{transparency},
 		  refraction{refraction}, illumination{illumination} {}
 
+	std::string name;
 	Vector3 ambient;		 // Ka, ambient color
 	Vector3 diffuse;		 // Kd, diffuse color
 	Vector3 specular;		 // Ks, specular color
