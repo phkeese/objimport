@@ -1,14 +1,8 @@
 #pragma once
 
+#include "objdatatypes.hpp"
 #include <vector>
-
 namespace objimport {
-
-using index = unsigned int;
-
-struct Vector3 {
-	float x, y, z;
-};
 
 // Stores indices to position, normal and texture coordinates of a vertex in OBJ
 // Indices start at 0
