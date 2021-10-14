@@ -10,6 +10,8 @@ add_library(libobjimport
 	objdata.cpp
 	objreader.hpp
 	objreader.cpp
+	parser.hpp
+	parser.cpp
 )
 
 add_executable(objimport

@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 		std::cout << "parsing successful\n";
 	} catch (ParsingError e) {
 		std::cout << "parsing error\n";
-		std::cout << "error:" << e.where() << ":" << e.what() << " near '"
+		std::cout << "error:" << e.line() << ":" << e.what() << " near '"
 				  << static_cast<char>(e.character()) << "'" << std::endl;
 		exit(EXIT_FAILURE);
 	}

@@ -6,9 +6,9 @@
 #include <map>
 #include <stdexcept>
 
-namespace objimport {
+using namespace objimport;
 
-OBJReader::OBJReader(std::istream &file) : _file{file}, _last{}, _line{1} {}
+OBJReader::OBJReader(std::istream &file) : Parser{file} {}
 
 OBJData OBJReader::parse() {
 	OBJData data = OBJData{};
@@ -71,27 +71,6 @@ void OBJReader::_parse_next(OBJData &data) {
 	_skip_line();
 }
 
-Vector3 OBJReader::_parse_vector() {
-	float x = _parse_float();
-	float y = _parse_float();
-	float z = _parse_float();
-	return {x, y, z};
-}
-
-float OBJReader::_parse_float() {
-	float value;
-	_file >> value;
-	return value;
-}
-
-int OBJReader::_parse_int() {
-	int value;
-	if (!(_file >> value)) {
-		throw _error("expect int");
-	}
-	return value;
-}
-
 Face OBJReader::_parse_face() {
 	std::vector<Vertex> vertices;
 
@@ -129,48 +108,6 @@ Vertex OBJReader::_parse_face_vertex() {
 	return {vertex, texture, normal};
 }
 
-std::string OBJReader::_parse_identifier() {
-	std::string identifier;
-	_file >> identifier;
-	return identifier;
-}
-
-void OBJReader::_skip_line() {
-	while (_peek() != '\n') {
-		_advance();
-	}
-	_consume('\n', "expect new line");
-	_line++;
-}
-
-void OBJReader::_skip_whitespace() {
-	while (_peek() != '\n' && isspace(_peek())) {
-		_advance();
-	}
-}
-
-int OBJReader::_advance() {
-	_last = _file.get();
-	return _last;
-}
-
-bool OBJReader::_match(int c) {
-	if (_check(c)) {
-		_advance();
-		return true;
-	} else {
-		return false;
-	}
-}
-
-bool OBJReader::_check(int c) { return _peek() == c; }
-
-void OBJReader::_consume(int c, std::string message) {
-	if (!_match(c)) {
-		throw _error(message);
-	}
-}
-
 Keyword OBJReader::_check_key(std::string s) {
 	static std::map<std::string, Keyword> known_keywords{
 		{"f", K_F},			  //
@@ -192,9 +129,3 @@ Keyword OBJReader::_check_key(std::string s) {
 		return K_ERROR;
 	}
 }
-
-ParsingError OBJReader::_error(std::string message) {
-	return ParsingError{message, _line, _peek()};
-}
-
-} // namespace objimport
