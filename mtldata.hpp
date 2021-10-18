@@ -37,8 +37,9 @@ struct Material {
 struct MTLData {
 	MTLData();
 
-	// Add a material and return the index to it
-	index add_material(std::string name, Material m);
+	// Add a material if it does not exist, otherwise update it
+	// Return index to it
+	index set_material(std::string name, Material m);
 
 	// Retrieve material by name
 	Material operator[](std::string name);
