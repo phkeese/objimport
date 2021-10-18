@@ -37,6 +37,8 @@ class OBJParser : public Parser {
 	Vertex _parse_face_vertex();
 	// Parse an MTL file
 	MTLData _parse_mltlib();
+	// Attempt to use a material, report error if impossible
+	void _use_material(std::string name, MTLData &data);
 
 	OBJKeyword _check_key(std::string s);
 	const std::string _directory;

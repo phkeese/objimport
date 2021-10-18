@@ -3,6 +3,8 @@
 namespace objimport {
 
 MTLData::MTLData() {
+	// Add pink error material
+	set_material("error", Material{"error", {1, 1, 1}, {1, 0, 1}});
 	// Add default white material
 	set_material("default", Material{"default"});
 }
@@ -22,8 +24,12 @@ index MTLData::set_material(std::string name, Material m) {
 	return i;
 }
 
+index MTLData::get_index_of(std::string name) {
+	return material_indices.at(name);
+}
+
 Material MTLData::operator[](std::string name) {
-	return materials.at(material_indices.at(name));
+	return materials[get_index_of(name)];
 }
 
 Material MTLData::operator[](index i) { return materials.at(i); }

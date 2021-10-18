@@ -52,8 +52,7 @@ void OBJParser::_parse_next(OBJData &data) {
 		data.material_data = _parse_mltlib();
 		break;
 	case K_OBJ_USEMTL:
-		_current_material_index =
-			data.material_data.get_index_of(_parse_identifier());
+		_use_material(_parse_identifier(), data.material_data);
 		break;
 	case K_OBJ_V:
 		data.add_vertex(_parse_vector());
@@ -116,6 +115,14 @@ MTLData OBJParser::_parse_mltlib() {
 
 	MTLParser parser{file};
 	return parser.parse();
+}
+
+void OBJParser::_use_material(std::string name, MTLData &data) {
+	try {
+		_current_material_index = data.get_index_of(name);
+	} catch (std::out_of_range e) {
+		_current_material_index = data.error_index();
+	}
 }
 
 OBJKeyword OBJParser::_check_key(std::string s) {

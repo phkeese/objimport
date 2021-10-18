@@ -41,9 +41,10 @@ struct MTLData {
 	// Return index to it
 	index set_material(std::string name, Material m);
 
-	inline index get_index_of(std::string name) {
-		return material_indices.at(name);
-	}
+	index get_index_of(std::string name);
+	// Returns the index to a fallback error material
+	index error_index() const { return 0; }
+
 	// Retrieve material by name
 	Material operator[](std::string name);
 	// Retrieve material by index
