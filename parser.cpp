@@ -32,7 +32,7 @@ std::string Parser::_parse_identifier() {
 }
 
 void Parser::_skip_line() {
-	while (_peek() != '\n') {
+	while (!_check('\n')) {
 		_advance();
 	}
 	_consume('\n', "expect new line");
