@@ -1,4 +1,4 @@
-#include "objreader.hpp"
+#include "objparser.hpp"
 #include <algorithm>
 #include <fstream>
 #include <functional>
@@ -8,9 +8,9 @@
 
 using namespace objimport;
 
-OBJReader::OBJReader(std::istream &file) : Parser{file} {}
+OBJParser::OBJParser(std::istream &file) : Parser{file} {}
 
-OBJData OBJReader::parse() {
+OBJData OBJParser::parse() {
 	OBJData data = OBJData{};
 
 	while (!_is_at_end()) {
@@ -20,7 +20,7 @@ OBJData OBJReader::parse() {
 	return data;
 }
 
-void OBJReader::_parse_next(OBJData &data) {
+void OBJParser::_parse_next(OBJData &data) {
 	int c = _peek();
 
 	// Handle comments and newlines separately from keywords
@@ -60,7 +60,7 @@ void OBJReader::_parse_next(OBJData &data) {
 	_skip_line();
 }
 
-Face OBJReader::_parse_face() {
+Face OBJParser::_parse_face() {
 	std::vector<Vertex> vertices;
 
 	// parse until end of line, handle CRLF
@@ -72,7 +72,7 @@ Face OBJReader::_parse_face() {
 	return Face{vertices};
 }
 
-Vertex OBJReader::_parse_face_vertex() {
+Vertex OBJParser::_parse_face_vertex() {
 	index vertex = 0, texture = 0, normal = 0;
 
 	vertex = _parse_int();
@@ -98,7 +98,7 @@ Vertex OBJReader::_parse_face_vertex() {
 	return {vertex, texture, normal};
 }
 
-Keyword OBJReader::_check_key(std::string s) {
+Keyword OBJParser::_check_key(std::string s) {
 	static std::map<std::string, Keyword> known_keywords{
 		{"f", K_F},			  //
 		{"l", K_L},			  //

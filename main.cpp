@@ -1,4 +1,4 @@
-#include "objreader.hpp"
+#include "objparser.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	OBJReader reader{file};
+	OBJParser reader{file};
 
 	try {
 		auto data = reader.parse();

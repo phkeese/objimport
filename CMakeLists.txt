@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 add_library(libobjimport
 	objdata.hpp
 	objdata.cpp
-	objreader.hpp
-	objreader.cpp
+	objparser.hpp
+	objparser.cpp
 	parser.hpp
 	parser.cpp
 )

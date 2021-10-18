@@ -22,9 +22,9 @@ enum Keyword {
 	K_S,
 };
 
-class OBJReader : public Parser {
+class OBJParser : public Parser {
   public:
-	OBJReader(std::istream &file);
+	OBJParser(std::istream &file);
 	OBJData parse();
 
   private:
