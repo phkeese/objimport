@@ -1,10 +1,17 @@
 #include "mtlparser.hpp"
 #include "objparser.hpp"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 using namespace objimport;
+
+// Extract a path from a given filename
+std::string directory_of(std::string filename) {
+	auto where = filename.find_last_of('/');
+	return filename.substr(0, where);
+}
 
 int main(int argc, char **argv) {
 	std::string filename;
@@ -19,12 +26,13 @@ int main(int argc, char **argv) {
 	std::cout << "parsing '" << filename << "'..." << std::endl;
 
 	std::ifstream file{filename};
+
 	if (!file) {
 		std::cerr << "cannot open file\n";
 		exit(EXIT_FAILURE);
 	}
 
-	OBJParser reader{file};
+	OBJParser reader{directory_of(filename), file};
 
 	try {
 		auto data = reader.parse();

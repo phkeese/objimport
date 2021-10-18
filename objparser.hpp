@@ -24,7 +24,7 @@ enum OBJKeyword {
 
 class OBJParser : public Parser {
   public:
-	OBJParser(std::istream &file);
+	OBJParser(std::string directory, std::istream &file);
 	OBJData parse();
 
   private:
@@ -39,6 +39,7 @@ class OBJParser : public Parser {
 	MTLData _parse_mltlib();
 
 	OBJKeyword _check_key(std::string s);
+	const std::string _directory;
 };
 
 } // namespace objimport

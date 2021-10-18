@@ -9,7 +9,8 @@
 
 using namespace objimport;
 
-OBJParser::OBJParser(std::istream &file) : Parser{file} {}
+OBJParser::OBJParser(std::string directory, std::istream &file)
+	: _directory{directory}, Parser{file} {}
 
 OBJData OBJParser::parse() {
 	OBJData data = OBJData{};
@@ -103,7 +104,7 @@ Vertex OBJParser::_parse_face_vertex() {
 }
 
 MTLData OBJParser::_parse_mltlib() {
-	std::string filename = _parse_identifier();
+	std::string filename = _directory + "/" + _parse_identifier();
 	std::ifstream file{filename};
 	if (!file) {
 		throw _error("cannot open material file '" + filename + "'");
