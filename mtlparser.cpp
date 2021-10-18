@@ -12,6 +12,9 @@ MTLData MTLParser::parse() {
 		_parse_next(data);
 	}
 
+	// Save current material in absence of a newmtl
+	data.set_material(_current_material.name, _current_material);
+
 	return data;
 }
 
@@ -39,11 +42,33 @@ void MTLParser::_parse_next(MTLData &data) {
 		throw _error("unexpected identifier '" + identifier + "'");
 		break;
 	case K_MTL_D:
-		_set_transparency(_parse_float());
+		_current_material.transparency = 1.0 - _parse_float();
+		break;
+	case K_MTL_ILLUM:
+		_current_material.illumination = _parse_int();
+		break;
+	case K_MTL_KA:
+		_current_material.ambient = _parse_vector();
+		break;
+	case K_MTL_KD:
+		_current_material.diffuse = _parse_vector();
+		break;
+	case K_MTL_KS:
+		_current_material.specular = _parse_vector();
 		break;
 	case K_MTL_NEWMTL:
 		_new_material(data);
 		break;
+	case K_MTL_NI:
+		_current_material.refraction = _parse_float();
+		break;
+	case K_MTL_NS:
+		_current_material.specular_exponent = _parse_float();
+		break;
+	case K_MTL_TR:
+		_current_material.transparency = _parse_float();
+		break;
+
 	default:
 		// Ignore valid but unimplemented keywords
 		break;
