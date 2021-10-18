@@ -1,3 +1,4 @@
+#include "mtlparser.hpp"
 #include "objparser.hpp"
 #include <fstream>
 #include <iostream>
@@ -10,7 +11,7 @@ int main(int argc, char **argv) {
 
 	if (argc < 2) {
 		std::cerr << "usage: " << argv[0] << " <file>\n";
-		filename = "../model.obj";
+		filename = "../model.mtl";
 	} else {
 		filename = argv[1];
 	}
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	OBJParser reader{file};
+	MTLParser reader{file};
 
 	try {
 		auto data = reader.parse();
