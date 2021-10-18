@@ -18,8 +18,10 @@ struct Vertex {
 
 // Stores the vertices of a face
 struct Face {
-	Face(std::vector<Vertex> vertices) : vertices{vertices} {}
+	Face(std::vector<Vertex> vertices, index material_index = 0)
+		: vertices{vertices}, material_index{material_index} {}
 	std::vector<Vertex> vertices;
+	index material_index;
 };
 
 // Stores the entire contents of a file

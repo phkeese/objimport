@@ -40,6 +40,7 @@ class OBJParser : public Parser {
 
 	OBJKeyword _check_key(std::string s);
 	const std::string _directory;
+	index _current_material_index = 0;
 };
 
 } // namespace objimport

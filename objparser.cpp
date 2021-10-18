@@ -48,14 +48,18 @@ void OBJParser::_parse_next(OBJData &data) {
 	case K_OBJ_F:
 		data.add_face(_parse_face());
 		break;
+	case K_OBJ_MTLLIB:
+		data.material_data = _parse_mltlib();
+		break;
+	case K_OBJ_USEMTL:
+		_current_material_index =
+			data.material_data.get_index_of(_parse_identifier());
+		break;
 	case K_OBJ_V:
 		data.add_vertex(_parse_vector());
 		break;
 	case K_OBJ_VN:
 		data.add_normal(_parse_vector());
-		break;
-	case K_OBJ_MTLLIB:
-		data.material_data = _parse_mltlib();
 		break;
 	default:
 		// Ignore valid but unimplemented keywords
@@ -74,7 +78,7 @@ Face OBJParser::_parse_face() {
 		vertices.push_back(_parse_face_vertex());
 	}
 
-	return Face{vertices};
+	return Face{vertices, _current_material_index};
 }
 
 Vertex OBJParser::_parse_face_vertex() {
