@@ -36,17 +36,6 @@ void OBJReader::_parse_next(OBJData &data) {
 		return;
 	}
 
-	switch (c) {
-		// No further parsing at end of file
-	case EOF:
-		return;
-	// Skip empty lines and comments
-	case '\n':
-	case '#':
-		_skip_line();
-		return;
-	}
-
 	// Anything else has to be a keyword (or an error!)
 	std::string identifier = _parse_identifier();
 	Keyword keyword = _check_key(identifier);
