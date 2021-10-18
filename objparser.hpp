@@ -7,19 +7,19 @@
 
 namespace objimport {
 
-enum Keyword {
-	K_ERROR,
-	K_F,
-	K_L,
-	K_MTLLIB,
-	K_O,
-	K_P,
-	K_USEMTL,
-	K_V,
-	K_VN,
-	K_VP,
-	K_VT,
-	K_S,
+enum OBJKeyword {
+	K_OBJ_ERROR,
+	K_OBJ_F,
+	K_OBJ_L,
+	K_OBJ_MTLLIB,
+	K_OBJ_O,
+	K_OBJ_P,
+	K_OBJ_USEMTL,
+	K_OBJ_V,
+	K_OBJ_VN,
+	K_OBJ_VP,
+	K_OBJ_VT,
+	K_OBJ_S,
 };
 
 class OBJParser : public Parser {
@@ -36,7 +36,7 @@ class OBJParser : public Parser {
 	// Parse a single vertex of a face in the v/t/n format
 	Vertex _parse_face_vertex();
 
-	Keyword _check_key(std::string s);
+	OBJKeyword _check_key(std::string s);
 };
 
 } // namespace objimport

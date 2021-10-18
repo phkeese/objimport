@@ -38,18 +38,18 @@ void OBJParser::_parse_next(OBJData &data) {
 
 	// Anything else has to be a keyword (or an error!)
 	std::string identifier = _parse_identifier();
-	Keyword keyword = _check_key(identifier);
+	OBJKeyword keyword = _check_key(identifier);
 	switch (keyword) {
-	case K_ERROR:
+	case K_OBJ_ERROR:
 		throw _error("unexpected identifier '" + identifier + "'");
 		break;
-	case K_F:
+	case K_OBJ_F:
 		data.add_face(_parse_face());
 		break;
-	case K_V:
+	case K_OBJ_V:
 		data.add_vertex(_parse_vector());
 		break;
-	case K_VN:
+	case K_OBJ_VN:
 		data.add_normal(_parse_vector());
 		break;
 	default:
@@ -98,24 +98,24 @@ Vertex OBJParser::_parse_face_vertex() {
 	return {vertex, texture, normal};
 }
 
-Keyword OBJParser::_check_key(std::string s) {
-	static std::map<std::string, Keyword> known_keywords{
-		{"f", K_F},			  //
-		{"l", K_L},			  //
-		{"mtllib", K_MTLLIB}, //
-		{"o", K_O},			  //
-		{"p", K_P},			  //
-		{"usemtl", K_USEMTL}, //
-		{"v", K_V},			  //
-		{"vn", K_VN},		  //
-		{"vp", K_VP},		  //
-		{"vt", K_VT},		  //
-		{"s", K_S},			  //
+OBJKeyword OBJParser::_check_key(std::string s) {
+	static std::map<std::string, OBJKeyword> known_keywords{
+		{"f", K_OBJ_F},			  //
+		{"l", K_OBJ_L},			  //
+		{"mtllib", K_OBJ_MTLLIB}, //
+		{"o", K_OBJ_O},			  //
+		{"p", K_OBJ_P},			  //
+		{"usemtl", K_OBJ_USEMTL}, //
+		{"v", K_OBJ_V},			  //
+		{"vn", K_OBJ_VN},		  //
+		{"vp", K_OBJ_VP},		  //
+		{"vt", K_OBJ_VT},		  //
+		{"s", K_OBJ_S},			  //
 	};
 
 	if (known_keywords.count(s)) {
 		return known_keywords[s];
 	} else {
-		return K_ERROR;
+		return K_OBJ_ERROR;
 	}
 }
