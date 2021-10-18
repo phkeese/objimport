@@ -35,6 +35,8 @@ class OBJParser : public Parser {
 	Face _parse_face();
 	// Parse a single vertex of a face in the v/t/n format
 	Vertex _parse_face_vertex();
+	// Parse an MTL file
+	MTLData _parse_mltlib();
 
 	OBJKeyword _check_key(std::string s);
 };

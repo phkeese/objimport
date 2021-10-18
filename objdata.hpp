@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mtldata.hpp"
 #include "objdatatypes.hpp"
 #include <vector>
 namespace objimport {
@@ -32,6 +33,8 @@ struct OBJData {
 	std::vector<Vector3> vertices;
 	std::vector<Vector3> normals;
 	std::vector<Face> faces;
+
+	MTLData material_data;
 };
 
 } // namespace objimport

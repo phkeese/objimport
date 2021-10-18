@@ -1,4 +1,5 @@
 #include "objparser.hpp"
+#include "mtlparser.hpp"
 #include <algorithm>
 #include <fstream>
 #include <functional>
@@ -52,6 +53,9 @@ void OBJParser::_parse_next(OBJData &data) {
 	case K_OBJ_VN:
 		data.add_normal(_parse_vector());
 		break;
+	case K_OBJ_MTLLIB:
+		data.material_data = _parse_mltlib();
+		break;
 	default:
 		// Ignore valid but unimplemented keywords
 		break;
@@ -96,6 +100,17 @@ Vertex OBJParser::_parse_face_vertex() {
 	}
 
 	return {vertex, texture, normal};
+}
+
+MTLData OBJParser::_parse_mltlib() {
+	std::string filename = _parse_identifier();
+	std::ifstream file{filename};
+	if (!file) {
+		throw _error("cannot open material file '" + filename + "'");
+	}
+
+	MTLParser parser{file};
+	return parser.parse();
 }
 
 OBJKeyword OBJParser::_check_key(std::string s) {
