@@ -10,7 +10,7 @@
 using namespace objimport;
 
 OBJParser::OBJParser(std::string directory, std::istream &file)
-	: _directory{directory}, Parser{file} {}
+	: Parser{file}, _directory{directory} {}
 
 OBJData OBJParser::parse() {
 	OBJData data = OBJData{};
