@@ -12,6 +12,8 @@ add_library(libobjimport
 	objparser.cpp
 	parser.hpp
 	parser.cpp
+	mtldata.hpp
+	mtldata.cpp
 )
 
 add_executable(objimport

@@ -2,6 +2,7 @@
 #include "objdatatypes.hpp"
 #include <map>
 #include <string>
+#include <vector>
 
 /**
  * Material Template Library Data
@@ -36,9 +37,16 @@ struct Material {
 struct MTLData {
 	MTLData();
 
+	// Add a material and return the index to it
 	index add_material(std::string name, Material m);
 
-	std::map<std::string, Material> materials;
+	// Retrieve material by name
+	Material operator[](std::string name);
+	// Retrieve material by index
+	Material operator[](index i);
+
+	std::map<std::string, index> material_indices;
+	std::vector<Material> materials;
 };
 
 } // namespace objimport
