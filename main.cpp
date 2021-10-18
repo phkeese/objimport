@@ -10,11 +10,12 @@ int main(int argc, char **argv) {
 
 	if (argc < 2) {
 		std::cerr << "usage: " << argv[0] << " <file>\n";
-		std::cout << "parsing default file...\n";
 		filename = "../model.obj";
 	} else {
 		filename = argv[1];
 	}
+
+	std::cout << "parsing '" << filename << "'..." << std::endl;
 
 	std::ifstream file{filename};
 	if (!file) {
