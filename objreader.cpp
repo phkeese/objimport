@@ -25,22 +25,11 @@ void OBJReader::_parse_next(OBJData &data) {
 
 	// Handle comments and newlines separately from keywords
 	switch (c) {
-	case EOF:
-		return;
-	case '\n':
-		_skip_line();
-		_line++;
-		return;
-	case '#':
-		_skip_line();
-		return;
-	}
-
-	switch (c) {
 		// No further parsing at end of file
 	case EOF:
 		return;
 	// Skip empty lines and comments
+	case '\r':
 	case '\n':
 	case '#':
 		_skip_line();
@@ -74,7 +63,8 @@ void OBJReader::_parse_next(OBJData &data) {
 Face OBJReader::_parse_face() {
 	std::vector<Vertex> vertices;
 
-	while (!_check('\n')) {
+	// parse until end of line, handle CRLF
+	while (!_check('\n') && !_check('\r')) {
 		_skip_whitespace();
 		vertices.push_back(_parse_face_vertex());
 	}
