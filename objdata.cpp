@@ -2,7 +2,7 @@
 
 namespace objimport {
 
-OBJData::OBJData() : vertices{}, normals{}, faces{} {
+OBJData::OBJData() {
 	// Add fallback data to shift indices and handle invalid indices
 	add_vertex({0, 0, 0});
 	add_normal({0, 1, 0});

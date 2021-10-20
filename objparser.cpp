@@ -1,4 +1,5 @@
-#include "objreader.hpp"
+#include "objparser.hpp"
+#include "mtlparser.hpp"
 #include <algorithm>
 #include <fstream>
 #include <functional>
@@ -8,9 +9,10 @@
 
 using namespace objimport;
 
-OBJReader::OBJReader(std::istream &file) : Parser{file} {}
+OBJParser::OBJParser(std::string directory, std::istream &file)
+	: Parser{file}, _directory{directory} {}
 
-OBJData OBJReader::parse() {
+OBJData OBJParser::parse() {
 	OBJData data = OBJData{};
 
 	while (!_is_at_end()) {
@@ -20,7 +22,7 @@ OBJData OBJReader::parse() {
 	return data;
 }
 
-void OBJReader::_parse_next(OBJData &data) {
+void OBJParser::_parse_next(OBJData &data) {
 	int c = _peek();
 
 	// Handle comments and newlines separately from keywords
@@ -38,18 +40,24 @@ void OBJReader::_parse_next(OBJData &data) {
 
 	// Anything else has to be a keyword (or an error!)
 	std::string identifier = _parse_identifier();
-	Keyword keyword = _check_key(identifier);
+	OBJKeyword keyword = _check_key(identifier);
 	switch (keyword) {
-	case K_ERROR:
+	case K_OBJ_ERROR:
 		throw _error("unexpected identifier '" + identifier + "'");
 		break;
-	case K_F:
+	case K_OBJ_F:
 		data.add_face(_parse_face());
 		break;
-	case K_V:
+	case K_OBJ_MTLLIB:
+		data.material_data = _parse_mltlib();
+		break;
+	case K_OBJ_USEMTL:
+		_use_material(_parse_identifier(), data.material_data);
+		break;
+	case K_OBJ_V:
 		data.add_vertex(_parse_vector());
 		break;
-	case K_VN:
+	case K_OBJ_VN:
 		data.add_normal(_parse_vector());
 		break;
 	default:
@@ -60,7 +68,7 @@ void OBJReader::_parse_next(OBJData &data) {
 	_skip_line();
 }
 
-Face OBJReader::_parse_face() {
+Face OBJParser::_parse_face() {
 	std::vector<Vertex> vertices;
 
 	// parse until end of line, handle CRLF
@@ -69,10 +77,10 @@ Face OBJReader::_parse_face() {
 		vertices.push_back(_parse_face_vertex());
 	}
 
-	return Face{vertices};
+	return Face{vertices, _current_material_index};
 }
 
-Vertex OBJReader::_parse_face_vertex() {
+Vertex OBJParser::_parse_face_vertex() {
 	index vertex = 0, texture = 0, normal = 0;
 
 	vertex = _parse_int();
@@ -98,24 +106,43 @@ Vertex OBJReader::_parse_face_vertex() {
 	return {vertex, texture, normal};
 }
 
-Keyword OBJReader::_check_key(std::string s) {
-	static std::map<std::string, Keyword> known_keywords{
-		{"f", K_F},			  //
-		{"l", K_L},			  //
-		{"mtllib", K_MTLLIB}, //
-		{"o", K_O},			  //
-		{"p", K_P},			  //
-		{"usemtl", K_USEMTL}, //
-		{"v", K_V},			  //
-		{"vn", K_VN},		  //
-		{"vp", K_VP},		  //
-		{"vt", K_VT},		  //
-		{"s", K_S},			  //
+MTLData OBJParser::_parse_mltlib() {
+	std::string filename = _directory + "/" + _parse_identifier();
+	std::ifstream file{filename};
+	if (!file) {
+		throw _error("cannot open material file '" + filename + "'");
+	}
+
+	MTLParser parser{file};
+	return parser.parse();
+}
+
+void OBJParser::_use_material(std::string name, MTLData &data) {
+	try {
+		_current_material_index = data.get_index_of(name);
+	} catch (std::out_of_range e) {
+		_current_material_index = data.error_index();
+	}
+}
+
+OBJKeyword OBJParser::_check_key(std::string s) {
+	static std::map<std::string, OBJKeyword> known_keywords{
+		{"f", K_OBJ_F},			  //
+		{"l", K_OBJ_L},			  //
+		{"mtllib", K_OBJ_MTLLIB}, //
+		{"o", K_OBJ_O},			  //
+		{"p", K_OBJ_P},			  //
+		{"usemtl", K_OBJ_USEMTL}, //
+		{"v", K_OBJ_V},			  //
+		{"vn", K_OBJ_VN},		  //
+		{"vp", K_OBJ_VP},		  //
+		{"vt", K_OBJ_VT},		  //
+		{"s", K_OBJ_S},			  //
 	};
 
 	if (known_keywords.count(s)) {
 		return known_keywords[s];
 	} else {
-		return K_ERROR;
+		return K_OBJ_ERROR;
 	}
 }

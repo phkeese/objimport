@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mtldata.hpp"
 #include "objdatatypes.hpp"
 #include <vector>
 namespace objimport {
@@ -17,8 +18,10 @@ struct Vertex {
 
 // Stores the vertices of a face
 struct Face {
-	Face(std::vector<Vertex> vertices) : vertices{vertices} {}
+	Face(std::vector<Vertex> vertices, index material_index = 0)
+		: vertices{vertices}, material_index{material_index} {}
 	std::vector<Vertex> vertices;
+	index material_index;
 };
 
 // Stores the entire contents of a file
@@ -32,6 +35,8 @@ struct OBJData {
 	std::vector<Vector3> vertices;
 	std::vector<Vector3> normals;
 	std::vector<Face> faces;
+
+	MTLData material_data;
 };
 
 } // namespace objimport
